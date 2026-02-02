@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitsBlaze | IA para Clínicas Estéticas</title>
+    <meta name="description"
+        content="Recepcionistas IA que agendan citas, responden pacientes y reducen el ausentismo en tu clínica. Implementación en 7 días.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;700;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* --- CSS Variables (Brand Colors) --- */
+        :root {
+            --primary-orange: #FF8C00;
+            --primary-orange-hover: #e07b00;
+            --deep-blue: #0B1E3D;
+            --gray-bg: #f5f7fa;
+            --text-dark: #1a1a2e;
+            --text-light: #555;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- Global Reset & Base --- */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.7;
+            background-color: #fff;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Orbitron', sans-serif;
+            line-height: 1.2;
+        }
+
+        /* --- Header --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(11, 30, 61, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand-logo {
+            font-size: 1.5rem;
+            color: white;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            color: var(--primary-orange);
+            font-size: 1.8rem;
+        }
+
+        .nav-cta {
+            background-color: var(--primary-orange);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .nav-cta:hover {
+            transform: scale(1.05);
+            background-color: var(--primary-orange-hover);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 600px;
+            background-image: linear-gradient(rgba(11, 30, 61, 0.85), rgba(11, 30, 61, 0.7)), url('hero_bg.png');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 3rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero h1 span {
+            color: var(--primary-orange);
+            display: block;
+            font-size: 3.5rem;
+            margin-top: 10px;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-orange);
+            color: white;
+            border: 2px solid var(--primary-orange);
+            box-shadow: 0 5px 15px rgba(255, 140, 0, 0.4);
+        }
+
+        .btn-primary:hover {
+            background-color: transparent;
+            color: var(--primary-orange);
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background-color: white;
+            color: var(--deep-blue);
+            transform: translateY(-3px);
+        }
+
+        /* --- Problems Section --- */
+        .problems {
+            padding: 5rem 5%;
+            background-color: white;
+            text-align: center;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--deep-blue);
+            margin-bottom: 3rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .problem-card {
+            padding: 2rem;
+            border-radius: 20px;
+            background: #fff;
+            border: 1px solid #eee;
+            transition: transform 0.3s;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--card-shadow);
+        }
+
+        .icon-box {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            background: #ffe3e3;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .problem-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--deep-blue);
+        }
+
+        /* --- Solution Section --- */
+        .solution {
+            padding: 5rem 5%;
+            background-color: var(--deep-blue);
+            color: white;
+        }
+
+        .solution .section-title h2 {
+            color: white;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2.5rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: left;
+        }
+
+        .feature-title {
+            color: var(--primary-orange);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* --- Social Proof --- */
+        .social-proof {
+            padding: 4rem 5%;
+            background-color: var(--gray-bg);
+            text-align: center;
+        }
+
+        .testimonial {
+            max-width: 800px;
+            margin: 0 auto;
+            font-style: italic;
+            font-size: 1.5rem;
+            color: #555;
+            position: relative;
+        }
+
+        .testimonial::before,
+        .testimonial::after {
+            content: '"';
+            font-size: 4rem;
+            color: var(--primary-orange);
+            position: absolute;
+            opacity: 0.3;
+        }
+
+        .testimonial::before {
+            top: -40px;
+            left: -20px;
+        }
+
+        .author {
+            margin-top: 1.5rem;
+            font-weight: 700;
+            color: var(--deep-blue);
+            font-style: normal;
+        }
+
+        /* --- FAQ --- */
+        .faq {
+            padding: 5rem 5%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .faq-question {
+            font-weight: 700;
+            color: var(--deep-blue);
+            cursor: pointer;
+        }
+
+        .faq-answer {
+            margin-top: 1rem;
+            color: var(--text-light);
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--deep-blue);
+            color: white;
+            padding: 4rem 5%;
+            text-align: center;
+        }
+
+        .footer-cta h2 {
+            margin-bottom: 2rem;
+        }
+
+        .footer-links {
+            margin-top: 3rem;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero h1 span {
+                font-size: 2.5rem;
+            }
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="brand-logo">
+            <span class="brand-icon">⚡</span> BITSBLAZE
+        </div>
+        <a href="#contacto" class="nav-cta">Cotizar</a>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Llena la agenda de tu clínica <br><span>Automáticamente, 24/7</span></h1>
+            <p>Implementamos recepcionistas con Inteligencia Artificial que atienden pacientes, responden dudas y
+                agendan citas en tu calendario mientras tú realizas procedimientos.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="alert('Iniciando demo chat...')">Quiero mi Recepcionista
+                    IA</button>
+                <button class="btn btn-secondary"
+                    onclick="document.querySelector('.solution').scrollIntoView({behavior: 'smooth'})">Ver cómo
+                    funciona</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problems Section -->
+    <section class="problems">
+        <div class="section-title">
+            <h2>¿Tu consultorio sufre de esto?</h2>
+        </div>
+        <div class="grid-3">
+            <div class="problem-card">
+                <div class="icon-box">🕒</div>
+                <h3>Pérdida fuera de horario</h3>
+                <p>El 40% de las consultas llegan después de las 7pm. Si no respondes en 5 minutos, el paciente se va a
+                    la competencia.</p>
+            </div>
+            <div class="problem-card">
+                <div class="icon-box">🤯</div>
+                <h3>Personal Saturado</h3>
+                <p>Tu recepcionista pierde horas respondiendo "¿precio?" una y otra vez en lugar de atender bien a los
+                    pacientes en sala.</p>
+            </div>
+            <div class="problem-card">
+                <div class="icon-box">👻</div>
+                <h3>Ausentismo</h3>
+                <p>Pierdes dinero cada vez que un paciente olvida su cita. Los recordatorios manuales fallan o quitan
+                    tiempo.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="solution">
+        <div class="section-title" style="text-align: center; margin-bottom: 3rem;">
+            <h2>La Solución BitsBlaze</h2>
+            <p style="opacity: 0.8;">Transformamos el caos en crecimiento predecible</p>
+        </div>
+        <div class="grid-3">
+            <div class="feature-card">
+                <div class="feature-title">📅 Agenda Automática</div>
+                <p>Sincronización directa con Google Calendar. El bot solo ofrece horarios que realmente tienes libres y
+                    confirma la cita automáticamente.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-title">⚡ Respuesta Inmediata</div>
+                <p>Entrena a tu IA con tus tratamientos y precios. Responde dudas clínicas básicas y comerciales en
+                    menos de 3 segundos.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-title">🔄 Reactivación de Pasivos</div>
+                <p>El sistema detecta quién no viene hace 6 meses y le escribe: "Hola María, ya toca tu limpieza anual".
+                    Ventas sin esfuerzo.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="social-proof">
+        <div class="testimonial">
+            <p>Desde que implementamos BitsBlaze, el ausentismo en primera consulta bajó un 80% y ya no pierdo pacientes
+                por no contestar el WhatsApp el fin de semana.</p>
+            <div class="author">Dra. Claudia M. - Clínica Dermalign</div>
+        </div>
+        <div
+            style="margin-top: 2rem; display: flex; justify-content: center; gap: 20px; align-items: center; opacity: 0.6;">
+            <span>Tecnología Segura:</span>
+            <strong>Meta Business Partner</strong>
+            <strong>OpenAI</strong>
+            <strong>Supabase</strong>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq">
+        <div class="section-title" style="text-align: center;">
+            <h2>Preguntas Frecuentes</h2>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">¿La IA se equivoca?</div>
+            <div class="faq-answer">Está entrenada estrictamente con tus datos. Si un paciente pregunta algo complejo,
+                la IA lo detecta y deriva la conversación a un humano inmediatamente.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">¿Cuánto tarda la implementación?</div>
+            <div class="faq-answer">Nuestro proceso "Fast-Track" deja tu sistema corriendo en menos de 7 días hábiles.
+            </div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">¿Necesito cambiar mi número de WhatsApp?</div>
+            <div class="faq-answer">No, integramos la inteligencia artificial directamente en tu línea de WhatsApp
+                Business actual.</div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contacto">
+        <div class="footer-cta">
+            <h2>¿Listo para escalar tu consultorio?</h2>
+            <button class="btn btn-primary" onclick="alert('Abriendo formulario de auditoría...')">Agendar Auditoría
+                Gratuita</button>
+        </div>
+        <div class="footer-links">
+            <a href="#">Privacidad</a>
+            <a href="#">Términos</a>
+            <span>© 2026 BitsBlaze Agency</span>
+        </div>
+    </footer>
+
+</body>
+
+</html>
